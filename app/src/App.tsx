@@ -11,7 +11,13 @@ import {
   Typography,
 } from "@mui/material";
 import DataTable from "./components/DataTable";
-
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link as RouterLink
+} from "react-router-dom";
+import { FicheDetail } from "./components/FicheDetail";
 function App() {
   return (
     <Container>
@@ -26,7 +32,7 @@ function App() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" color="inherit" component="div">
-            Template
+            Mission Apprentissage
           </Typography>
         </Toolbar>
       </AppBar>
@@ -34,10 +40,22 @@ function App() {
         <Link underline="hover" color="inherit" href="/">
           Home
         </Link>
-        <Typography color="text.primary">Results</Typography>
       </Breadcrumbs>
       <Container>
-        <DataTable />
+        <Router>
+          <Routes>
+            <Route
+              path="/"
+              element={<DataTable />}
+            />
+            <Route
+              path="fiche/:id"
+              element={<FicheDetail />}
+            />
+          </Routes>
+          
+        </Router>
+
       </Container>
     </Container>
   );

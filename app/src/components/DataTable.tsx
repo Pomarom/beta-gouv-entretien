@@ -1,6 +1,7 @@
-import * as React from 'react';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import { useEffect, useState} from 'react';
+import { DataGrid, GridColDef, GridRowParams, GridValueGetterParams } from '@mui/x-data-grid';
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom';
 
 
 const columns: GridColDef[] = [
@@ -9,19 +10,25 @@ const columns: GridColDef[] = [
 ];
 
 
-const getMissions = (page: number, size: number) => {
-  return axios.get('http://localhost:8080/missions', { params: { page, size }})
+const getMissions = () => {
+  return axios.get('http://localhost:8080/missions')
 }
 
 export default function DataTable() {
 
-  const [missions, setMissions] = React.useState([])
-  const [paginationModel, setPaginationModel] = React.useState({
+  const [missions, setMissions] = useState([])
+  const [paginationModel, setPaginationModel] = useState({
     pageSize: 5,
     page: 0,
   })
-  React.useEffect(() => {
-    getMissions(paginationModel.page, paginationModel.pageSize).then(({data}) => setMissions(data)) 
+
+  const navigate = useNavigate();
+  const handleClick = (params: GridRowParams) => navigate(`/fiche/${params.id}`);
+
+  useEffect(() => {
+    getMissions()
+    .then(({data}) => setMissions(data)) 
+    .catch(() => setMissions([]))
   }, []);
 
   return (
@@ -33,6 +40,7 @@ export default function DataTable() {
         onPaginationModelChange={setPaginationModel}
         pageSizeOptions={[5]}
         checkboxSelection
+        onRowClick={handleClick}
       />
     </div>
   );
